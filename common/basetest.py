@@ -16,7 +16,7 @@ class BaseTest(object):
         self.driver = webdriver.Chrome(executable_path=PATH(os.path.join(
             "..",
             "chrome_driver",
-            "chromedriver"
+            "chromedriver.exe"
         )))
 
     def teardown(self):

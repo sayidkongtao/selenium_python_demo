@@ -1,5 +1,6 @@
 import os
 import configparser
+import json
 
 PATH = lambda path: os.path.abspath(
     os.path.join(
@@ -22,5 +23,9 @@ class Utils:
         url = config.get("platform", "url")
         return {"username": username, "password": password, "url": url}
 
-    def load_json_file(self):
-        pass
+    @staticmethod
+    def load_json_file(file_name):
+        with open(file_name, encoding="utf-8") as f:
+            content = f.read()
+            return json.loads(content)
+
