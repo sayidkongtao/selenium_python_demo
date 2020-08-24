@@ -41,4 +41,4 @@ class LoginPage(BasePage):
         except Exception as e:
             pass
 
-
+        time.sleep(4)
