@@ -1,6 +1,7 @@
 from common.basepage import BasePage
 from selenium.webdriver.common.by import By
 import time
+import allure
 
 
 class LoginPage(BasePage):
@@ -20,6 +21,7 @@ class LoginPage(BasePage):
     # 下一次再说
     next_time_btn = (By.CSS_SELECTOR, ".next-time")
 
+    @allure.step("登陆用户名：")
     def login(self, user_name, password):
 
         # 输入用户名
