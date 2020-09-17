@@ -28,4 +28,3 @@ class Utils:
         with open(file_name, encoding="utf-8") as f:
             content = f.read()
             return json.loads(content)
-

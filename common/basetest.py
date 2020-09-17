@@ -9,9 +9,10 @@ PATH = lambda path: os.path.abspath(
     )
 )
 
+
 class BaseTest(object):
 
-    def setup(self):
+    def setup_class(self):
         self.config = Utils.load_config()
         self.driver = webdriver.Chrome(executable_path=PATH(os.path.join(
             "..",
@@ -19,5 +20,5 @@ class BaseTest(object):
             "chromedriver.exe"
         )))
 
-    def teardown(self):
+    def teardown_class(self):
         self.driver.close()

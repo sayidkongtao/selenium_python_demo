@@ -28,4 +28,12 @@ class TestLogin(BaseTest):
         login_page = LoginPage(self.driver)
         login_page.login(user["username"], user["password"])
 
-
+    def test_login_failed(self):
+        user = Utils.load_json_file(PATH(os.path.join(
+            "..",
+            "input_data",
+            "user.json"
+        )))
+        home_page = HomePage(self.driver, base_url=self.config["url"])
+        home_page.go_home_page()
+        assert False
