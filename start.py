@@ -9,4 +9,4 @@ PATH = lambda path: os.path.abspath(
 )
 
 if __name__ == '__main__':
-    pytest.main(['--html=./report.html', "--alluredir=./tmp/my_allure_results"])
+    pytest.main(["--alluredir=./tmp/my_allure_results"])
