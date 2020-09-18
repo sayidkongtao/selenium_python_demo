@@ -1,7 +1,7 @@
 import pytest
-from selenium import webdriver
 import os
 import allure
+
 
 PATH = lambda path: os.path.abspath(
     os.path.join(
@@ -9,6 +9,20 @@ PATH = lambda path: os.path.abspath(
         path
     )
 )
+
+
+@pytest.fixture(scope="session", autouse=False)
+def setup_session():
+    print("setup_session")
+    a = "1"
+    b = "2"
+
+
+@pytest.fixture(scope="module", autouse=False)
+def setup_module():
+    print("setup_module")
+    c = "3"
+    d = "4"
 
 
 @pytest.hookimpl(hookwrapper=True, tryfirst=True)
@@ -21,7 +35,6 @@ def pytest_runtest_makereport(item, call):
     """
     # 获取钩子方法的调用结果
     outcome = yield
-    print('用例执行结果', outcome)
 
     # 从钩子方法的调用结果中获取测试报告
     report = outcome.get_result()
