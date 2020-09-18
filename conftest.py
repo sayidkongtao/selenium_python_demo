@@ -3,12 +3,35 @@ from selenium import webdriver
 import os
 import allure
 
+from utils.utils import Utils
+
 PATH = lambda path: os.path.abspath(
     os.path.join(
         os.path.dirname(__file__),
         path
     )
 )
+
+driver = None
+config = None
+
+
+#初始化用例
+@pytest.fixture(scope='session', autouse=False)
+def init():
+    print('init: ------------------')
+    global driver
+    global config
+    if driver is None:
+        config = Utils.load_config()
+        driver = webdriver.Chrome(executable_path=PATH(os.path.join(
+            "chrome_driver",
+            "chromedriver.exe"
+        )))
+    yield driver, config
+    print('结束用例')
+    driver.close()
+    driver = None
 
 
 @pytest.hookimpl(hookwrapper=True, tryfirst=True)
