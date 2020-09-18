@@ -68,6 +68,7 @@ def pytest_runtest_makereport(item, call):
             f.write(report.nodeid + extra + "\n")
 
         # 添加allure报告截图
-        if hasattr(item.instance, "driver"):
+        global driver
+        if hasattr(driver, "get_screenshot_as_png"):
             with allure.step('添加失败截图...'):
-                allure.attach(item.instance.driver.get_screenshot_as_png(), "失败截图", allure.attachment_type.PNG)
+                allure.attach(driver.get_screenshot_as_png(), "失败截图", allure.attachment_type.PNG)
