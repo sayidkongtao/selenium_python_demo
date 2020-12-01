@@ -22,7 +22,8 @@ class APIClient(object):
         return "".join([self.base_url, relative_url])
 
     def send_request(self, method, url, params=None, data=None, json=None, headers=None, **kwargs):
-        return self.session.request(method, url=self.build_url(url), params=params, data=data, json=json, headers=headers, **kwargs)
+        return self.session.request(method, url=self.build_url(url), params=params, data=data, json=json,
+                                    headers=headers, **kwargs)
 
     def download_file(self, method, url, file_name, *args, **kwargs):
         with closing(self.send_request(method, url, stream=True, *args, **kwargs)) as response:
