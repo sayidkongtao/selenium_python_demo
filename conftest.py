@@ -2,34 +2,26 @@ import pytest
 from selenium import webdriver
 import os
 import allure
-
 from utils.utils import Utils
-
-PATH = lambda path: os.path.abspath(
-    os.path.join(
-        os.path.dirname(__file__),
-        path
-    )
-)
 
 driver = None
 config = None
 
 
-#初始化用例
+# init driver
 @pytest.fixture(scope='session', autouse=False)
 def init():
-    print('init: ------------------')
     global driver
     global config
     if driver is None:
+        print('init driver: ------------------')
         config = Utils.load_config()
-        driver = webdriver.Chrome(executable_path=PATH(os.path.join(
+        driver = webdriver.Chrome(executable_path=Utils.get_file_absolute_path(
             "chrome_driver",
             "chromedriver.exe"
-        )))
+        ))
     yield driver, config
-    print('结束用例')
+    print('Finish test case')
     driver.close()
     driver = None
 
@@ -37,26 +29,25 @@ def init():
 @pytest.hookimpl(hookwrapper=True, tryfirst=True)
 def pytest_runtest_makereport(item, call):
     """
-    获取每个用例状态的钩子函数
+    Hook function to get the status of each use case
     :param item:
     :param call:
     :return:
     """
-    # 获取钩子方法的调用结果
+    # Get the call result of hook method
     outcome = yield
-    print('用例执行结果', outcome)
+    print('Use case execution results', outcome)
 
-    # 从钩子方法的调用结果中获取测试报告
+    # Get test report from call result of hook method
     report = outcome.get_result()
 
-    # 仅仅获取用例call 执行结果是失败的情况, 不包含 setup/teardown
+    # It is a failure to get only the call execution result of the use case, excluding setup / teardown
     if report.when == "call" and report.failed:
-        failed_path = PATH(
-            os.path.join(
-                "output",
-                "failures"
-            )
+        failed_path = Utils.get_file_absolute_path(
+            "output",
+            "failures"
         )
+
         mode = "a" if os.path.exists(failed_path) else "w"
 
         with open(failed_path, mode) as f:
@@ -67,8 +58,8 @@ def pytest_runtest_makereport(item, call):
                 extra = ""
             f.write(report.nodeid + extra + "\n")
 
-        # 添加allure报告截图
+        # Add a screenshot of allure Report
         global driver
         if hasattr(driver, "get_screenshot_as_png"):
-            with allure.step('添加失败截图...'):
-                allure.attach(driver.get_screenshot_as_png(), "失败截图", allure.attachment_type.PNG)
+            with allure.step('Add failed screenshot...'):
+                allure.attach(driver.get_screenshot_as_png(), "Failed Screenshot", allure.attachment_type.PNG)

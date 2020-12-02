@@ -2,16 +2,7 @@ from common.basetest import BaseTest
 from pages.homepage import HomePage
 from pages.loginpage import LoginPage
 from utils.utils import Utils
-import os
 import allure
-
-
-PATH = lambda path: os.path.abspath(
-    os.path.join(
-        os.path.dirname(__file__),
-        path
-    )
-)
 
 
 @allure.story('epic_1')
@@ -27,11 +18,10 @@ class TestLogin(BaseTest):
     """)
     def test_login(self, init):
         driver, config = init
-        user = Utils.load_json_file(PATH(os.path.join(
-            "..",
+        user = Utils.load_json_file(Utils.get_file_absolute_path(
             "input_data",
             "user.json"
-        )))
+        ))
         home_page = HomePage(driver, base_url=config["url"])
         home_page.go_home_page()
         home_page.go_to_login_page()
@@ -47,11 +37,10 @@ class TestLogin(BaseTest):
     """)
     def test_login_failed(self, init):
         driver, config = init
-        user = Utils.load_json_file(PATH(os.path.join(
-            "..",
+        user = Utils.load_json_file(Utils.get_file_absolute_path(
             "input_data",
             "user.json"
-        )))
+        ))
         home_page = HomePage(driver, base_url=config["url"])
         home_page.go_home_page()
         assert False
