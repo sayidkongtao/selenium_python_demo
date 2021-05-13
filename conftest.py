@@ -4,26 +4,19 @@ import os
 import allure
 from utils.utils import Utils
 
-driver = None
-config = None
-
 
 # init driver
 @pytest.fixture(scope='session', autouse=False)
 def init():
-    global driver
-    global config
-    if driver is None:
-        print('init driver: ------------------')
-        config = Utils.load_config()
-        driver = webdriver.Chrome(executable_path=Utils.get_file_absolute_path(
-            "chrome_driver",
-            "chromedriver.exe"
-        ))
+    print('init driver: ------------------')
+    config = Utils.load_config()
+    driver = webdriver.Chrome(executable_path=Utils.get_file_absolute_path(
+        "chrome_driver",
+        "chromedriver.exe"
+    ))
     yield driver, config
     print('Finish test case')
-    driver.close()
-    driver = None
+    driver.quit()
 
 
 @pytest.hookimpl(hookwrapper=True, tryfirst=True)
@@ -59,7 +52,13 @@ def pytest_runtest_makereport(item, call):
             f.write(report.nodeid + extra + "\n")
 
         # Add a screenshot of allure Report
-        global driver
-        if hasattr(driver, "get_screenshot_as_png"):
+        current_driver = item.funcargs['init'][0]
+        if hasattr(current_driver, "get_screenshot_as_png"):
             with allure.step('Add failed screenshot...'):
-                allure.attach(driver.get_screenshot_as_png(), "Failed Screenshot", allure.attachment_type.PNG)
+                try:
+                    allure.attach(current_driver.get_screenshot_as_png(), "Failed Screenshot",
+                                  allure.attachment_type.PNG)
+                except Exception as err:
+                    print(err)
+                    allure.attach("current_driver.get_screenshot_as_png()" + str(err), "Failed Screenshot",
+                                  allure.attachment_type.TEXT)
