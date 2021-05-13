@@ -43,7 +43,6 @@ class BasePage(object):
         driver_wait = WebDriverWait(self.driver, time_for_first_visible)
         try:
             driver_wait.until(EC.presence_of_element_located(locator))
-            self.webdriver_wait.until_not(EC.presence_of_element_located(locator))
         except:
             # ignore the error
             pass
